@@ -1,0 +1,26 @@
+<project name="MyProject" default="sshcheck" basedir=".">
+  <description>
+    Sequentially run commands on a list of servers
+  </description>
+  <!-- Load the ant contrib lib -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml" />
+  <target name="sshcheck"
+        description="sshcheck">
+    <loadfile property="textFile" srcfile="${basedir}/ssh_check_serverlist.txt"/>
+    <for param="line" list="${textFile}" delimiter="${line.separator}">
+      <sequential>
+        <echo message="@{line}"/>
+        <trycatch>
+        <try>
+		<echo message="hiii"/>
+            <sshexec trust="true" host="@{line}" username="seema" password="seema" command="echo quit | telnet 10.124.131.83 8080; ps -ef | grep weblogic; find / -iname 'server' 2>/dev/null" />
+        </try>
+        <catch>
+            <echo message="failed"/>
+        </catch>
+        </trycatch>
+        <echo message="================================================="/>
+      </sequential>
+    </for>
+  </target>
+</project>
